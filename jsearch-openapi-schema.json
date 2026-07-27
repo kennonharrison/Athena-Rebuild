@@ -1,0 +1,236 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "JSearch Job Search API",
+    "description": "Search for real-time job listings based on job title and location. Returns live job postings with apply links.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://jsearch.p.rapidapi.com"
+    }
+  ],
+  "paths": {
+    "/search": {
+      "get": {
+        "operationId": "searchJobs",
+        "summary": "Search for jobs by title and location",
+        "description": "Returns real-time job listings matching the query and location. Use this after presenting career matches to show the user actual open positions they can apply to.",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "description": "Job search query. Use the career title from the match results. Example: 'Data Center Technician in Richmond, VA'",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number for pagination. Default 1.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "num_pages",
+            "in": "query",
+            "required": false,
+            "description": "Number of pages to return. Keep at 1 to conserve API calls.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "date_posted",
+            "in": "query",
+            "required": false,
+            "description": "Filter by posting date. Options: all, today, 3days, week, month. Default: month.",
+            "schema": {
+              "type": "string",
+              "enum": ["all", "today", "3days", "week", "month"],
+              "default": "month"
+            }
+          },
+          {
+            "name": "remote_jobs_only",
+            "in": "query",
+            "required": false,
+            "description": "Filter for remote jobs only. Default false.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "employment_types",
+            "in": "query",
+            "required": false,
+            "description": "Filter by employment type. Comma-separated: FULLTIME, CONTRACTOR, PARTTIME, INTERN.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful job search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "job_title": {
+                            "type": "string"
+                          },
+                          "employer_name": {
+                            "type": "string"
+                          },
+                          "employer_logo": {
+                            "type": "string"
+                          },
+                          "job_employment_type": {
+                            "type": "string"
+                          },
+                          "job_apply_link": {
+                            "type": "string"
+                          },
+                          "job_description": {
+                            "type": "string"
+                          },
+                          "job_city": {
+                            "type": "string"
+                          },
+                          "job_state": {
+                            "type": "string"
+                          },
+                          "job_min_salary": {
+                            "type": "number"
+                          },
+                          "job_max_salary": {
+                            "type": "number"
+                          },
+                          "job_salary_period": {
+                            "type": "string"
+                          },
+                          "job_is_remote": {
+                            "type": "boolean"
+                          },
+                          "job_posted_at_datetime_utc": {
+                            "type": "string"
+                          },
+                          "job_highlights": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/estimated-salary": {
+      "get": {
+        "operationId": "getEstimatedSalary",
+        "summary": "Get estimated salary for a job title in a location",
+        "description": "Returns salary estimates for a specific job title and location. Use to provide more accurate local salary data.",
+        "parameters": [
+          {
+            "name": "job_title",
+            "in": "query",
+            "required": true,
+            "description": "Job title to get salary estimate for.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "required": true,
+            "description": "Location for salary estimate. Example: 'Richmond, VA'",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "description": "Search radius in miles. Default 100.",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Salary estimate results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "job_title": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "min_salary": {
+                            "type": "number"
+                          },
+                          "max_salary": {
+                            "type": "number"
+                          },
+                          "median_salary": {
+                            "type": "number"
+                          },
+                          "salary_period": {
+                            "type": "string"
+                          },
+                          "publisher_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
